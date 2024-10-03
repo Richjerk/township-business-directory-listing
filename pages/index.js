@@ -1,4 +1,3 @@
-// src/pages/index.js
 "use client";  // Mark this file as a Client Component
 
 import { useState } from 'react';
@@ -8,6 +7,7 @@ export default function Home() {
   const [businessDescription, setBusinessDescription] = useState('');
   const [businessAddress, setBusinessAddress] = useState('');
   const [businessPhone, setBusinessPhone] = useState('');
+  const [productImage, setProductImage] = useState(null);  // State to store the uploaded image
   const [userName, setUserName] = useState('');
   const [userEmail, setUserEmail] = useState('');
   const [userPhone, setUserPhone] = useState('');
@@ -15,11 +15,23 @@ export default function Home() {
 
   const handleBusinessSubmit = (e) => {
     e.preventDefault();
+
+    const formData = new FormData();
+    formData.append('businessName', businessName);
+    formData.append('businessDescription', businessDescription);
+    formData.append('businessAddress', businessAddress);
+    formData.append('businessPhone', businessPhone);
+    if (productImage) {
+      formData.append('productImage', productImage); // Add the uploaded image to form data
+    }
+
+    // Submit business data to the API or server
     console.log({
       businessName,
       businessDescription,
       businessAddress,
       businessPhone,
+      productImage,
     });
   };
 
@@ -42,6 +54,10 @@ export default function Home() {
         });
       });
     }
+  };
+
+  const handleImageChange = (e) => {
+    setProductImage(e.target.files[0]); // Store the uploaded image in state
   };
 
   return (
@@ -76,6 +92,12 @@ export default function Home() {
               placeholder="Business Phone"
               value={businessPhone}
               onChange={(e) => setBusinessPhone(e.target.value)}
+              required
+            />
+            <input
+              type="file"
+              onChange={handleImageChange}  // Handle image file upload
+              accept="image/*"
               required
             />
             <button type="submit">Register Business</button>
